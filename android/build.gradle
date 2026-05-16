@@ -25,7 +25,12 @@ repositories {
 }
 
 dependencies {
-  // Umeng common (analytics core).
+  // Umeng common SDK + the asms native bridge.
+  // - common 9.4.0: long-standing stable release; we keep that
+  //   to stay bug-compatible with prod.
+  // - asms is bumped to 1.6.3 (current 1.6.x line) so its libumeng-spy.so
+  //   ships an x86_64 build — required for modern emulators / 64-bit devices.
+  //   older setups pinned 1.2.3 which only has arm + x86 .so files.
   implementation 'com.umeng.umsdk:common:9.4.0'
-  implementation 'com.umeng.umsdk:asms:1.2.3'
+  implementation 'com.umeng.umsdk:asms:1.6.3'
 }

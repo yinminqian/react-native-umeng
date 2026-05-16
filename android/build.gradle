@@ -1,0 +1,31 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.minqian.umeng'
+version = '0.1.0'
+
+android {
+  namespace "com.minqian.umeng"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+    consumerProguardFiles 'proguard-rules.pro'
+  }
+  lintOptions {
+    abortOnError false
+  }
+}
+
+repositories {
+  maven { url 'https://maven.aliyun.com/repository/public' }
+  maven { url 'https://repo1.maven.org/maven2/' }
+  mavenCentral()
+}
+
+dependencies {
+  // Umeng common (analytics core).
+  implementation 'com.umeng.umsdk:common:9.4.0'
+  implementation 'com.umeng.umsdk:asms:1.2.3'
+}

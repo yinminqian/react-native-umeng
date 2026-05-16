@@ -1,0 +1,48 @@
+{
+  "name": "@minqian/react-native-umeng",
+  "version": "0.1.0",
+  "description": "Umeng Analytics SDK wrapper for Expo / React Native — Android only, lazy init, privacy-policy friendly",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build",
+    "android",
+    "src",
+    "plugin/build",
+    "app.plugin.js",
+    "expo-module.config.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "expo-module build",
+    "build:plugin": "tsc --project plugin/tsconfig.json",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "prepare": "expo-module prepare && npm run build:plugin",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "umeng",
+    "analytics",
+    "react-native-umeng"
+  ],
+  "author": "yinminqian <yinminqian@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "~19.1.1",
+    "expo": "^55.0.24",
+    "expo-module-scripts": "^55.0.2",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "dependencies": {
+    "@expo/config-plugins": "^55.0.9"
+  }
+}

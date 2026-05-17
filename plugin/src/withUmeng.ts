@@ -86,7 +86,10 @@ function withUmengMavenRepo(config: any): any {
  * Also inject the fix into the Podfile post_install for the pod targets.
  */
 function withUmengExcludedArchs(config: any): any {
-  // 1. Main Xcode project: set EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
+  // 1. Main Xcode project: set "EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64.
+  // The key must be wrapped in literal double quotes — CocoaPods' pbxproj parser
+  // rejects unquoted keys containing brackets, while Xcode itself accepts both.
+  const KEY = '"EXCLUDED_ARCHS[sdk=iphonesimulator*]"';
   config = withXcodeProject(config, (c: any) => {
     const project = c.modResults;
     const targetName = c.modRequest.projectName;
@@ -98,8 +101,10 @@ function withUmengExcludedArchs(config: any): any {
         (conf.buildSettings.PRODUCT_NAME === targetName ||
           conf.buildSettings.PRODUCT_BUNDLE_IDENTIFIER)
       ) {
-        if (!conf.buildSettings['EXCLUDED_ARCHS[sdk=iphonesimulator*]']) {
-          conf.buildSettings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64';
+        // Strip any previous unquoted form to avoid duplicates
+        delete conf.buildSettings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'];
+        if (!conf.buildSettings[KEY]) {
+          conf.buildSettings[KEY] = '"arm64"';
         }
       }
     }

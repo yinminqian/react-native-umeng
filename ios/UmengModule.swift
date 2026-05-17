@@ -44,7 +44,7 @@ public class UmengModule: Module {
       if let p = provider, !p.isEmpty {
         MobClick.profileSignIn(withPUID: userId, provider: p)
       } else {
-        MobClick.profileSignIn(userId)
+        MobClick.profileSignIn(withPUID: userId)
       }
     }
 

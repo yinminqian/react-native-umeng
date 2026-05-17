@@ -7,6 +7,7 @@
   "files": [
     "build",
     "android",
+    "ios",
     "src",
     "plugin/build",
     "app.plugin.js",

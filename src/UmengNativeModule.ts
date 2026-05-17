@@ -14,8 +14,6 @@ export interface UmengNativeModuleType extends NativeModule {
   reportError(message: string): void;
 }
 
-// iOS / web: silently no-op every call so JS-side feature flags don't need
-// `Platform.OS === 'android'` checks at every site.
 const stub: UmengNativeModuleType = {
   // expo-modules-core's NativeModule augments with addListener/removeListeners;
   // we only declare the methods we actually expose.
@@ -35,4 +33,6 @@ const stub: UmengNativeModuleType = {
 
 const native = requireOptionalNativeModule<UmengNativeModuleType>('Umeng');
 
-export default Platform.OS === 'android' && native ? native : stub;
+// Native module is now available on both iOS and Android.
+// Fallback to stub only on web or if native autolinking failed.
+export default (Platform.OS === 'web' || !native) ? stub : native;

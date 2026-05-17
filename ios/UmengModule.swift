@@ -1,12 +1,6 @@
 import ExpoModulesCore
-
-#if canImport(UMCCommon)
-import UMCCommon
-#endif
-
-#if canImport(UMCAnalytics)
-import UMCAnalytics
-#endif
+import UMCommon
+import UMAnalytics
 
 public class UmengModule: Module {
   private var initialized = false

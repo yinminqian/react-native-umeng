@@ -1,6 +1,7 @@
 import ExpoModulesCore
-import UMCommon
-import UMAnalytics
+
+// UMCommon and UMAnalytics are old Objective-C frameworks (2019) without
+// Swift module maps. We call them via UmengBridge (ObjC wrapper in this pod).
 
 public class UmengModule: Module {
   private var initialized = false
@@ -9,7 +10,7 @@ public class UmengModule: Module {
     Name("Umeng")
 
     Function("setLogEnabled") { (enabled: Bool) in
-      UMConfigure.setLogEnabled(enabled)
+      UmengBridge.setLogEnabled(enabled)
     }
 
     Function("preInit") { (_: String, _: String) in
@@ -18,7 +19,7 @@ public class UmengModule: Module {
     }
 
     Function("init") { (appKey: String, channel: String, _: Int, _: String) in
-      UMConfigure.initWithAppkey(appKey, channel: channel)
+      UmengBridge.setup(withAppKey: appKey, channel: channel)
       self.initialized = true
     }
 
@@ -28,35 +29,35 @@ public class UmengModule: Module {
 
     Function("onEvent") { (eventId: String, properties: [String: String]) in
       if properties.isEmpty {
-        MobClick.event(eventId)
+        UmengBridge.event(eventId)
       } else {
-        MobClick.event(eventId, attributes: properties)
+        UmengBridge.event(eventId, attributes: properties)
       }
     }
 
     Function("onProfileSignIn") { (userId: String, provider: String?) in
       if let p = provider, !p.isEmpty {
-        MobClick.profileSignIn(withPUID: userId, provider: p)
+        UmengBridge.profileSignIn(withPUID: userId, provider: p)
       } else {
-        MobClick.profileSignIn(withPUID: userId)
+        UmengBridge.profileSignIn(withPUID: userId)
       }
     }
 
     Function("onProfileSignOff") {
-      MobClick.profileSignOff()
+      UmengBridge.profileSignOff()
     }
 
     Function("onPageStart") { (pageName: String) in
-      MobClick.beginLogPageView(pageName)
+      UmengBridge.beginLogPageView(pageName)
     }
 
     Function("onPageEnd") { (pageName: String) in
-      MobClick.endLogPageView(pageName)
+      UmengBridge.endLogPageView(pageName)
     }
 
     Function("reportError") { (message: String) in
       // UMCAnalytics 6.0 has no stock error API; fall back to a custom event
-      MobClick.event("rn_reported_error", attributes: ["message": message])
+      UmengBridge.event("rn_reported_error", attributes: ["message": message])
     }
   }
 }

@@ -3,6 +3,7 @@ import {
   createRunOncePlugin,
   withAndroidManifest,
   withProjectBuildGradle,
+  withXcodeProject,
 } from '@expo/config-plugins';
 
 export interface WithUmengProps {
@@ -78,12 +79,42 @@ function withUmengMavenRepo(config: any): any {
   });
 }
 
+/**
+ * UMCCommon and UMCAnalytics (Umeng legacy 2019 SDKs) ship device-only arm64 slices.
+ * They pre-date arm64 simulator support (Xcode 12+). Exclude arm64 from simulator
+ * builds on the main app target to avoid linker errors on Apple Silicon Macs.
+ * Also inject the fix into the Podfile post_install for the pod targets.
+ */
+function withUmengExcludedArchs(config: any): any {
+  // 1. Main Xcode project: set EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
+  config = withXcodeProject(config, (c: any) => {
+    const project = c.modResults;
+    const targetName = c.modRequest.projectName;
+    const configurations = project.pbxXCBuildConfigurationSection();
+    for (const uuid in configurations) {
+      const conf = configurations[uuid];
+      if (
+        conf.buildSettings &&
+        (conf.buildSettings.PRODUCT_NAME === targetName ||
+          conf.buildSettings.PRODUCT_BUNDLE_IDENTIFIER)
+      ) {
+        if (!conf.buildSettings['EXCLUDED_ARCHS[sdk=iphonesimulator*]']) {
+          conf.buildSettings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64';
+        }
+      }
+    }
+    return c;
+  });
+  return config;
+}
+
 const withUmeng: ConfigPlugin<WithUmengProps> = (config, props) => {
   if (!props?.appKey) {
     throw new Error(`[${PLUGIN_NAME}] "appKey" prop is required`);
   }
   config = withUmengAndroidManifest(config, props);
   config = withUmengMavenRepo(config);
+  config = withUmengExcludedArchs(config);
   return config;
 };
 

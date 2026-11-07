@@ -30,7 +30,12 @@
     "analytics",
     "react-native-umeng"
   ],
-  "author": "yinminqian <yinminqian@gmail.com>",
+  "author": "yinminqian",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yinminqian/react-native-umeng.git"
+  },
+  "homepage": "https://github.com/yinminqian/react-native-umeng#readme",
   "license": "MIT",
   "devDependencies": {
     "@types/react": "~19.1.1",

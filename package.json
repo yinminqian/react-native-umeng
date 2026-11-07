@@ -30,7 +30,7 @@
     "analytics",
     "react-native-umeng"
   ],
-  "author": "yinminqian",
+  "author": "yinminqian <yinminqian@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yinminqian/react-native-umeng.git"
